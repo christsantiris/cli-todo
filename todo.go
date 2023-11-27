@@ -3,6 +3,7 @@ package todo
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"time"
@@ -78,4 +79,11 @@ func (t *Todos) StoreAddedItem(filename string) error { // Write added todo back
 	}
 
 	return ioutil.WriteFile(filename, data, 0644)
+}
+
+func (t *Todos) PrintToDos() {
+	for i, item := range *t {
+		i++ // increment +1 before looping because cli takes 1 as first index not zero
+		fmt.Printf("%d - %s\n", i, item.Task)
+	}
 }

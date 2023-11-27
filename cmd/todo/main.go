@@ -1,9 +1,13 @@
 package main
 
 import (
+	"bufio"
+	"errors"
 	"flag"
 	"fmt"
+	"io"
 	"os"
+	"strings"
 
 	todo "github.com/christsantiris/cli-todo"
 )
@@ -17,6 +21,7 @@ func main() {
 	add := flag.Bool("add", false, "Add a new To do")
 	complete := flag.Int("complete", 0, "Mark a to do as completed")
 	delete := flag.Int("delete", 0, "delete a to do")
+	list := flag.Bool("list", false, "list all todos")
 
 	flag.Parse()
 
@@ -30,8 +35,13 @@ func main() {
 
 	switch {
 	case *add:
-		todos.AddItem("Sample to do")
-		err := todos.StoreAddedItem(todoFile)
+		task, err := getInput(os.Stdin, flag.Args()...)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err.Error())
+			os.Exit(1)
+		}
+		todos.AddItem(task)
+		err = todos.StoreAddedItem(todoFile)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err.Error())
 			os.Exit(1)
@@ -58,8 +68,29 @@ func main() {
 			fmt.Fprintln(os.Stderr, err.Error())
 			os.Exit(1)
 		}
+	case *list:
+		todos.PrintToDos()
 	default:
 		fmt.Fprintln(os.Stdout, "invalid command")
 		os.Exit(1)
 	}
+}
+
+func getInput(r io.Reader, args ...string) (string, error) {
+	if len(args) > 0 {
+		return strings.Join(args, " "), nil
+	}
+
+	scanner := bufio.NewScanner(r)
+	scanner.Scan()
+	if err := scanner.Err(); err != nil {
+		return "", err
+	}
+
+	text := scanner.Text()
+	if len(text) == 0 {
+		return "", errors.New("a to do value is required")
+	}
+
+	return scanner.Text(), nil
 }
