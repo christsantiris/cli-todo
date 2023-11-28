@@ -11,17 +11,17 @@ import (
 	"github.com/alexeyco/simpletable"
 )
 
-type Item struct {
+type Todo struct {
 	Task        string
 	Done        bool
 	CreatedAt   time.Time
 	CompletedAt time.Time
 }
 
-type Todos []Item
+type Todos []Todo
 
 func (t *Todos) AddItem(task string) {
-	todo := Item{
+	todo := Todo{
 		Task:        task,
 		Done:        false,
 		CreatedAt:   time.Now(),
@@ -105,12 +105,17 @@ func (t *Todos) PrintToDos() {
 			task = green(fmt.Sprintf("\u2705 %s", item.Task))
 			done = green("Yes")
 		}
+
+		completedAtStr := item.CompletedAt.Format(time.RFC822)
+		if item.CompletedAt.IsZero() {
+			completedAtStr = ""
+		}
 		cells = append(cells, []*simpletable.Cell{
 			{Text: fmt.Sprintf("%d", i)},
 			{Text: task},
 			{Text: done},
 			{Text: item.CreatedAt.Format(time.RFC822)},
-			{Text: item.CompletedAt.Format(time.RFC822)},
+			{Text: completedAtStr},
 		})
 	}
 	table.Body = &simpletable.Body{Cells: cells}
