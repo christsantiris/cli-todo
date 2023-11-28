@@ -4,3 +4,5 @@
 ### To complete a ToDo: `./todo -complete=<index>` - use index 1 as first element for better ux
 
 ### To list the ToDos: `./todo -list`
+
+### To delete a ToDO: `./todo -delete=<index>`
