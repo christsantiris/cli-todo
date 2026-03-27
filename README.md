@@ -1,10 +1,29 @@
-### To create the go binary run `go build ./cmd/todo`
-### To add a Todo:`./todo -add <your text here>` - this will add a .todos.json file if one does not exist
+# Todo CLI — Go
 
-### To complete a Todo: `./todo -complete=<index>` - uses index 1 as first element for better ux
+A command-line todo manager with colored terminal output, backed by a local `.todos.json` file.
 
-### To list the Todos: `./todo -list`- lists the Todos in colored terminal
+---
 
-### To delete a Todo: `./todo -delete=<index>` -removes a Todo
+## 🔨 Build
+```bash
+go build ./cmd/todo
+```
 
-<img width="561" alt="Screenshot 2023-11-27 at 7 47 36 PM" src="https://github.com/christsantiris/cli-todo/assets/19711817/769e67ee-ed79-46dd-a188-59202e7bab79">
+---
+
+## 📋 Commands
+
+| Action | Command |
+|---|---|
+| Add a todo | `./todo -add <your text here>` |
+| Complete a todo | `./todo -complete=<index>` |
+| List all todos | `./todo -list` |
+| Delete a todo | `./todo -delete=<index>` |
+
+> Indices start at **1** for better UX. A `.todos.json` file is created automatically on first add.
+
+---
+
+## 📸 Preview
+
+<img width="561" alt="Todo CLI screenshot" src="https://github.com/christsantiris/cli-todo/assets/19711817/769e67ee-ed79-46dd-a188-59202e7bab79">
