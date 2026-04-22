@@ -21,6 +21,7 @@ func main() {
 	add := flag.Bool("add", false, "Add a new To do")
 	complete := flag.Int("complete", 0, "Mark a to do as completed")
 	delete := flag.Int("delete", 0, "delete a to do")
+	edit := flag.Int("edit", 0, "Edit a to do by index")
 	list := flag.Bool("list", false, "list all todos")
 
 	flag.Parse()
@@ -46,6 +47,7 @@ func main() {
 			fmt.Fprintln(os.Stderr, err.Error())
 			os.Exit(1)
 		}
+		todos.PrintToDos("")
 	case *complete > 0:
 		err := todos.CompleteItem(*complete)
 		if err != nil {
@@ -57,6 +59,24 @@ func main() {
 			fmt.Fprintln(os.Stderr, err.Error())
 			os.Exit(1)
 		}
+		todos.PrintToDos("")
+	case *edit > 0:
+		task, err := getInput(os.Stdin, flag.Args()...)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err.Error())
+			os.Exit(1)
+		}
+		err = todos.EditItem(*edit, task)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err.Error())
+			os.Exit(1)
+		}
+		err = todos.StoreAddedItem(todoFile)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err.Error())
+			os.Exit(1)
+		}
+		todos.PrintToDos("")
 	case *delete > 0:
 		err := todos.DeleteItem(*delete)
 		if err != nil {
@@ -68,8 +88,9 @@ func main() {
 			fmt.Fprintln(os.Stderr, err.Error())
 			os.Exit(1)
 		}
+		todos.PrintToDos("")
 	case *list:
-		todos.PrintToDos()
+		todos.PrintToDos(strings.Join(flag.Args(), " "))
 	default:
 		fmt.Fprintln(os.Stdout, "invalid command")
 		os.Exit(1)

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/alexeyco/simpletable"
@@ -30,6 +31,17 @@ func (t *Todos) CompleteItem(index int) error {
 
 	ls[index-1].CompletedAt = time.Now()
 	ls[index-1].Done = true
+
+	return nil
+}
+
+func (t *Todos) EditItem(index int, task string) error {
+	ls := *t
+	if index <= 0 || index > len(ls) {
+		return errors.New("invalid index")
+	}
+
+	ls[index-1].Task = task
 
 	return nil
 }
@@ -74,7 +86,7 @@ func (t *Todos) StoreAddedItem(filename string) error { // Write added todo back
 	return ioutil.WriteFile(filename, data, 0644)
 }
 
-func (t *Todos) PrintToDos() {
+func (t *Todos) PrintToDos(keyword string) {
 	table := simpletable.New()
 
 	table.Header = &simpletable.Header{
@@ -87,13 +99,18 @@ func (t *Todos) PrintToDos() {
 		},
 	}
 
+	filter := strings.ToLower(keyword)
+
 	var cells [][]*simpletable.Cell
 	for i, item := range *t {
 		i++ // increment before looping because cli uses 1 as first index
+		if filter != "" && !strings.Contains(strings.ToLower(item.Task), filter) {
+			continue
+		}
 		task := blue(item.Task)
 		done := blue("No")
 		if item.Done {
-			task = green(fmt.Sprintf("\u2705 %s", item.Task))
+			task = green(fmt.Sprintf("✅ %s", item.Task))
 			done = green("Yes")
 		}
 

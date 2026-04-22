@@ -1,4 +1,6 @@
 .DS_Store
+.todos.json
+todo
 *.[56789ao]
 *.a[56789o]
 *.so

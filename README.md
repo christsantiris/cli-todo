@@ -17,7 +17,9 @@ go build ./cmd/todo
 |---|---|
 | Add a todo | `./todo -add <your text here>` |
 | Complete a todo | `./todo -complete=<index>` |
+| Edit a todo | `./todo -edit=<index> <new text>` |
 | List all todos | `./todo -list` |
+| Search todos | `./todo -list <keyword>` |
 | Delete a todo | `./todo -delete=<index>` |
 
 > Indices start at **1** for better UX. A `.todos.json` file is created automatically on first add.
