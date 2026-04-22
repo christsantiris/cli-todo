@@ -1,6 +1,6 @@
 # Todo CLI — Go
 
-A command-line todo manager with colored terminal output, backed by a local `.todos.json` file.
+A command-line todo manager with colored terminal output, backed by a JSON file.
 
 ---
 
@@ -22,7 +22,17 @@ go build ./cmd/todo
 | Search todos | `./todo -list <keyword>` |
 | Delete a todo | `./todo -delete=<index>` |
 
-> Indices start at **1** for better UX. A `.todos.json` file is created automatically on first add.
+> Indices start at **1** for better UX.
+
+## 📁 Storage
+
+Todos are stored in `~/.todos.json` by default, so your list is the same regardless of which directory you run the command from.
+
+Set the `TODO_FILE` environment variable to use a different path:
+
+```bash
+export TODO_FILE=~/work-todos.json
+```
 
 ---
 

@@ -12,9 +12,16 @@ import (
 	todo "github.com/christsantiris/cli-todo"
 )
 
-const (
-	todoFile = ".todos.json"
-)
+func resolveFilePath() (string, error) {
+	if path := os.Getenv("TODO_FILE"); path != "" {
+		return path, nil
+	}
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return "", err
+	}
+	return home + "/.todos.json", nil
+}
 
 func main() {
 	// Pass the flags to the cli as arguments. See readme.
@@ -25,6 +32,12 @@ func main() {
 	list := flag.Bool("list", false, "list all todos")
 
 	flag.Parse()
+
+	todoFile, err := resolveFilePath()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err.Error())
+		os.Exit(1)
+	}
 
 	todos := &todo.Todos{}
 
